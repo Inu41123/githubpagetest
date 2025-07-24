@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de KaibaCorp - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); }
+        
+        .header { background-color: var(--surface); padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); }
+        .logo { font-weight: bold; font-size: 1.5rem; color: var(--highlight); }
+        
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; }
+        
+        .profile-header { display: flex; gap: 2rem; margin-bottom: 2rem; align-items: center; }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--highlight); }
+        .profile-info h1 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--highlight); }
+        .rating { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; }
+        .rating-stars { color: var(--highlight); }
+        .location { display: flex; align-items: center; gap: 0.5rem; color: rgba(224, 224, 224, 0.8); }
+        
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+        .stat-card { background-color: var(--surface); padding: 1.5rem; border-radius: 10px; text-align: center; }
+        .stat-value { font-size: 1.8rem; font-weight: bold; color: var(--highlight); }
+        .stat-label { font-size: 0.9rem; opacity: 0.8; }
+        
+        .section-title { font-size: 1.5rem; margin: 2rem 0 1rem; color: var(--highlight); border-bottom: 1px solid var(--accent); padding-bottom: 0.5rem; }
+        
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+        .card { background-color: var(--surface); border-radius: 8px; overflow: hidden; transition: all 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .card img { width: 100%; height: 150px; object-fit: cover; }
+        .card-info { padding: 1rem; }
+        .card-title { font-weight: bold; margin-bottom: 0.5rem; }
+        .card-price { color: var(--highlight); font-weight: bold; }
+        
+        .actions { display: flex; gap: 1rem; margin-top: 2rem; }
+        .btn { padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background-color: var(--highlight); color: var(--bg); border: none; }
+        .btn-outline { background: none; border: 1px solid var(--highlight); color: var(--highlight); }
+        
+        @media (max-width: 768px) {
+            .profile-header { flex-direction: column; text-align: center; }
+            .stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <div><i class="fas fa-arrow-left"></i> Volver</div>
+    </header>
+
+    <div class="container">
+        <div class="profile-header">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="KaibaCorp" class="profile-avatar">
+            <div class="profile-info">
+                <h1>KaibaCorp</h1>
+                <div class="rating">
+                    <div class="rating-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <span>(128 valoraciones)</span>
+                </div>
+                <p>Vendedor premium desde 2020</p>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Domino City, 2.5km de ti</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">142</div>
+                <div class="stat-label">Ventas completadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">98%</div>
+                <div class="stat-label">Evaluaciones positivas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">3d</div>
+                <div class="stat-label">Tiempo promedio de respuesta</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary"><i class="fas fa-comment-dots"></i> Enviar mensaje</button>
+            <button class="btn btn-outline"><i class="fas fa-store"></i> Ver tienda</button>
+            <button class="btn btn-outline"><i class="fas fa-flag"></i> Reportar</button>
+        </div>
+
+        <h2 class="section-title">Cartas en venta</h2>
+        <div class="card-grid">
+            <div class="card">
+                <img src="https://images.ygoprodeck.com/images/cards/89631139.jpg" alt="Blue-Eyes White Dragon">
+                <div class="card-info">
+                    <div class="card-title">Blue-Eyes White Dragon</div>
+                    <div class="card-price">€85.00</div>
+                </div>
+            </div>
+            <!-- Más cartas... -->
+        </div>
+
+        <h2 class="section-title">Reseñas recientes</h2>
+        <!-- Reseñas... -->
+    </div>
+</body>
+</html>

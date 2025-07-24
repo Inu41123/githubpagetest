@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Transacción - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+            --success: #66BB6A;
+            --warning: #FFA726;
+            --error: #EF5350;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* === HEADER === */
+        .header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--highlight);
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--highlight);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* === MAIN CONTENT === */
+        .main-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .transaction-title {
+            font-size: 1.8rem;
+            color: var(--highlight);
+        }
+        
+        .transaction-status {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .status-completed {
+            background-color: rgba(102, 187, 106, 0.2);
+            color: var(--success);
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 167, 38, 0.2);
+            color: var(--warning);
+        }
+        
+        .status-cancelled {
+            background-color: rgba(239, 83, 80, 0.2);
+            color: var(--error);
+        }
+
+        /* === TRANSACTION DETAILS === */
+        .transaction-details {
+            background-color: var(--surface);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--accent);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: rgba(224, 224, 224, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            text-align: right;
+        }
+        
+        .detail-value.amount {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .amount-positive {
+            color: var(--success);
+        }
+        
+        .amount-negative {
+            color: var(--primary);
+        }
+        
+        .amount-neutral {
+            color: var(--highlight);
+        }
+        
+        .card-preview {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+            align-items: center;
+        }
+        
+        .card-image {
+            width: 120px;
+            height: 180px;
+            background-color: var(--accent);
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid var(--highlight);
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-info {
+            flex-grow: 1;
+        }
+        
+        .card-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--highlight);
+        }
+        
+        .card-meta {
+            font-size: 0.9rem;
+            color: rgba(224, 224, 224, 0.8);
+            margin-bottom: 0.5rem;
+        }
+
+        /* === USER INFO === */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: var(--surface);
+            border-radius: 10px;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .user-details {
+            flex-grow: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+        
+        .user-rating {
+            color: var(--highlight);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* === ACTIONS === */
+        .transaction-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--highlight);
+            color: var(--bg);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #FFA000;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: none;
+            border: 2px solid var(--highlight);
+            color: var(--highlight);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+        
+        .btn-error {
+            background: none;
+            border: 2px solid var(--error);
+            color: var(--error);
+        }
+        
+        .btn-error:hover {
+            background-color: rgba(239, 83, 80, 0.1);
+        }
+
+        /* === TIMELINE === */
+        .timeline {
+            margin: 2rem 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--accent);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--highlight);
+        }
+        
+        .timeline-date {
+            font-size: 0.8rem;
+            color: rgba(224, 224, 224, 0.7);
+            margin-bottom: 0.3rem;
+        }
+        
+        .timeline-content {
+            background-color: var(--surface);
+            padding: 1rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .card-preview {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .transaction-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="logo">DUEL MARKET</div>
+        <div style="width: 40px;"></div> <!-- Espacio para alinear -->
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Header -->
+        <div class="transaction-header">
+            <h1 class="transaction-title">Venta: Dragón Blanco</h1>
+            <div class="transaction-status status-completed">Completada</div>
+        </div>
+
+        <!-- Card Preview -->
+        <div class="card-preview">
+            <div class="card-image">
+                <img src="https://images.ygoprodeck.com/images/cards/89631139.jpg" alt="Blue-Eyes White Dragon">
+            </div>
+            <div class="card-info">
+                <div class="card-name">Dragón Blanco de Ojos Azules</div>
+                <div class="card-meta">Edición: LOB-001 · Rareza: Ultra</div>
+                <div class="card-meta">Estado: Cerca de Mint</div>
+                <div class="card-meta">ID: DM-789456</div>
+            </div>
+        </div>
+
+        <!-- Transaction Details -->
+        <div class="transaction-details">
+            <div class="detail-row">
+                <span class="detail-label">Tipo de transacción</span>
+                <span class="detail-value">Venta</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Precio acordado</span>
+                <span class="detail-value amount amount-positive">+ €45.99</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Comisión de Duel Market</span>
+                <span class="detail-value amount amount-negative">- €2.30</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Método de pago</span>
+                <span class="detail-value">PayPal</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Fecha de transacción</span>
+                <span class="detail-value">15 Jun 2023, 14:30</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">ID de transacción</span>
+                <span class="detail-value">DM-TX-789456123</span>
+            </div>
+        </div>
+
+        <!-- User Info -->
+        <h3 style="margin-bottom: 0.5rem; color: var(--highlight);">Comprador</h3>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+                <div class="user-name">DuelMaster22</div>
+                <div class="user-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    (128 transacciones)
+                </div>
+            </div>
+            <button class="action-btn btn-outline" style="max-width: 120px;">
+                <i class="fas fa-comment"></i> Contactar
+            </button>
+        </div>
+
+        <!-- Timeline -->
+        <h3 style="margin: 2rem 0 1rem; color: var(--highlight);">Historial de la transacción</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">15 Jun 2023, 14:30</div>
+                <div class="timeline-content">
+                    <p>Transacción completada exitosamente</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">15 Jun 2023, 13:45</div>
+                <div class="timeline-content">
+                    <p>El comprador confirmó la recepción de la carta</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">12 Jun 2023, 09:20</div>
+                <div class="timeline-content">
+                    <p>Carta enviada - N° de seguimiento: AB123456789CD</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">10 Jun 2023, 18:15</div>
+                <div class="timeline-content">
+                    <p>Pago recibido y verificado</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">10 Jun 2023, 17:30</div>
+                <div class="timeline-content">
+                    <p>Oferta aceptada por €45.99</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="transaction-actions">
+            <button class="action-btn btn-outline">
+                <i class="fas fa-file-pdf"></i> Descargar factura
+            </button>
+            <button class="action-btn btn-outline">
+                <i class="fas fa-star"></i> Valorar usuario
+            </button>
+            <button class="action-btn btn-error">
+                <i class="fas fa-flag"></i> Reportar problema
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de descarga de factura
+        document.querySelectorAll('.action-btn')[0].addEventListener('click', function() {
+            alert('Factura descargada exitosamente');
+        });
+    </script>
+</body>
+</html>

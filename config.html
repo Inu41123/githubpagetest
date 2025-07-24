@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); }
+        
+        .header { background-color: var(--surface); padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); }
+        .logo { font-weight: bold; font-size: 1.5rem; color: var(--highlight); }
+        
+        .settings-container { max-width: 800px; margin: 2rem auto; padding: 0 1.5rem; }
+        
+        .settings-group { margin-bottom: 2rem; }
+        .settings-title { font-size: 1.3rem; margin-bottom: 1rem; color: var(--highlight); border-bottom: 1px solid var(--accent); padding-bottom: 0.5rem; }
+        
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem; background-color: var(--surface); margin-bottom: 0.8rem; border-radius: 8px; }
+        .setting-info { flex-grow: 1; }
+        .setting-name { font-weight: 500; margin-bottom: 0.3rem; }
+        .setting-desc { font-size: 0.9rem; opacity: 0.7; }
+        
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--accent); transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--highlight); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        
+        .logout-btn { display: block; width: 100%; padding: 1rem; text-align: center; background-color: var(--surface); border: 1px solid var(--error); color: var(--error); border-radius: 8px; font-weight: bold; margin-top: 2rem; transition: all 0.3s; }
+        .logout-btn:hover { background-color: rgba(239, 83, 80, 0.1); }
+        .close-link { /* Nueva clase para el enlace de cerrar */
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            text-decoration: none; /* Elimina el subrayado */
+            display: inline-block;
+            padding: 0.2rem; /* Pequeño padding para área de clic */
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <div> <a href="perfil.html" class="close-link"><i class="fas fa-times"></i></a></div>
+    </header>
+
+    <div class="settings-container">
+        <div class="settings-group">
+            <h2 class="settings-title">Privacidad</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-name">Mostrar ubicación en mi perfil</div>
+                    <div class="setting-desc">Permite que otros usuarios vean tu ciudad aproximada</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-name">Perfil público</div>
+                    <div class="setting-desc">Permite que cualquiera vea tu perfil y publicaciones</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h2 class="settings-title">Notificaciones</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-name">Notificaciones por email</div>
+                    <div class="setting-desc">Recibe alertas importantes en tu correo electrónico</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-name">Notificaciones push</div>
+                    <div class="setting-desc">Recibe alertas en tu dispositivo</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h2 class="settings-title">Seguridad</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-name">Autenticación de dos factores</div>
+                    <div class="setting-desc">Añade una capa extra de seguridad a tu cuenta</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-name">Cambiar contraseña</div>
+                    <div class="setting-desc">Actualiza tu contraseña regularmente</div>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        
+        <a href="#" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+        </a>
+    </div>
+</body>
+</html>

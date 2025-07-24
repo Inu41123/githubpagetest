@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportar Usuario - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+            --error: #EF5350;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); }
+        
+        .header { background-color: var(--surface); padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--accent); }
+        .logo { font-weight: bold; font-size: 1.5rem; color: var(--highlight); }
+        
+        .report-container { max-width: 600px; margin: 2rem auto; padding: 0 1.5rem; }
+        
+        .report-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+        .report-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+        .report-title { font-size: 1.5rem; color: var(--highlight); }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-control { width: 100%; padding: 0.8rem 1rem; background-color: var(--accent); border: 1px solid var(--secondary); border-radius: 6px; color: var(--text); }
+        .form-control:focus { outline: none; border-color: var(--highlight); }
+        textarea.form-control { min-height: 120px; resize: vertical; }
+        
+        .radio-group { margin: 1rem 0; }
+        .radio-option { display: flex; align-items: center; gap: 0.8rem; margin: 0.8rem 0; }
+        
+        .btn { padding: 0.8rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background-color: var(--error); color: white; border: none; }
+        .btn-outline { background: none; border: 1px solid var(--highlight); color: var(--highlight); }
+        
+        .actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <div><i class="fas fa-times"></i></div>
+    </header>
+
+    <div class="report-container">
+        <div class="report-header">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="KaibaCorp" class="report-avatar">
+            <h1 class="report-title">Reportar a KaibaCorp</h1>
+        </div>
+        
+        <div class="form-group">
+            <label>Motivo del reporte</label>
+            
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="reason1" name="reason" checked>
+                    <label for="reason1">Comportamiento inapropiado</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="reason2" name="reason">
+                    <label for="reason2">Intento de estafa</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="reason3" name="reason">
+                    <label for="reason3">Artículos falsificados</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="reason4" name="reason">
+                    <label for="reason4">Incumplimiento de acuerdo</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="reason5" name="reason">
+                    <label for="reason5">Otro</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="details">Descripción detallada</label>
+            <textarea id="details" class="form-control" placeholder="Proporciona todos los detalles relevantes sobre el incidente..."></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>Evidencia (opcional)</label>
+            <div style="border: 2px dashed var(--accent); border-radius: 8px; padding: 2rem; text-align: center; margin-top: 0.5rem;">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Arrastra imágenes o documentos aquí</p>
+                <p style="font-size: 0.8rem; opacity: 0.7;">Formatos: JPG, PNG, PDF (max 5MB cada uno)</p>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-outline">Cancelar</button>
+            <button class="btn btn-primary"><i class="fas fa-flag"></i> Enviar reporte</button>
+        </div>
+    </div>
+</body>
+</html>

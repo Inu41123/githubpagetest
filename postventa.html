@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorar Transacción - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background-color: var(--primary);
+            padding: 1.5rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .transaction-info {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .card-image {
+            width: 100px;
+            height: 150px;
+            background-color: var(--accent);
+            border-radius: 8px;
+            border: 1px solid var(--highlight);
+        }
+        
+        .transaction-details {
+            flex-grow: 1;
+        }
+        
+        .transaction-details h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .transaction-details p {
+            color: rgba(224, 224, 224, 0.8);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rating-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .star {
+            font-size: 2.5rem;
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .star:hover, .star.active {
+            color: var(--highlight);
+            transform: scale(1.1);
+        }
+        
+        .rating-description {
+            font-size: 0.9rem;
+            color: rgba(224, 224, 224, 0.7);
+            margin-top: 0.5rem;
+        }
+
+        .feedback-section {
+            margin: 2rem 0;
+        }
+        
+        .feedback-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--accent);
+            border: 1px solid var(--secondary);
+            border-radius: 8px;
+            color: var(--text);
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--highlight);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .submit-btn {
+            padding: 1rem 2rem;
+            background-color: var(--highlight);
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #FFA000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .transaction-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Valorar Transacción</h1>
+            <p>Califica tu experiencia con este intercambio</p>
+        </div>
+        
+        <div class="content">
+            <div class="transaction-info">
+                <div class="card-image"></div>
+                <div class="transaction-details">
+                    <h2>Dragón Blanco de Ojos Azules</h2>
+                    <p>Intercambiado por Mago Oscuro + €7.49</p>
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <p><strong>DuelMaster22</strong></p>
+                            <p>4.8★ (32 transacciones)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rating-section">
+                <h2>¿Cómo calificarías esta transacción?</h2>
+                <div class="stars">
+                    <div class="star" data-rating="1"><i class="far fa-star"></i></div>
+                    <div class="star" data-rating="2"><i class="far fa-star"></i></div>
+                    <div class="star" data-rating="3"><i class="far fa-star"></i></div>
+                    <div class="star" data-rating="4"><i class="far fa-star"></i></div>
+                    <div class="star" data-rating="5"><i class="far fa-star"></i></div>
+                </div>
+                <p class="rating-description">Selecciona de 1 a 5 estrellas</p>
+            </div>
+            
+            <div class="feedback-section">
+                <h3>Comentario opcional:</h3>
+                <textarea placeholder="¿Qué destacarías de esta transacción? (Ej: El duelista fue puntual, la carta estaba en perfecto estado...)"></textarea>
+            </div>
+            
+            <div class="actions">
+                <button class="submit-btn">Enviar Valoración</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de valoración por estrellas
+        const stars = document.querySelectorAll('.star');
+        let selectedRating = 0;
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                selectedRating = rating;
+                
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.innerHTML = '<i class="fas fa-star"></i>';
+                        s.classList.add('active');
+                    } else {
+                        s.innerHTML = '<i class="far fa-star"></i>';
+                        s.classList.remove('active');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseover', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                
+                stars.forEach((s, index) => {
+                    if (index < rating && !selectedRating) {
+                        s.innerHTML = '<i class="fas fa-star"></i>';
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseout', function() {
+                if (!selectedRating) {
+                    stars.forEach(s => {
+                        s.innerHTML = '<i class="far fa-star"></i>';
+                    });
+                } else {
+                    stars.forEach((s, index) => {
+                        if (index < selectedRating) {
+                            s.innerHTML = '<i class="fas fa-star"></i>';
+                        } else {
+                            s.innerHTML = '<i class="far fa-star"></i>';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

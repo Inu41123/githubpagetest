@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+            --error: #EF5350;
+            --success: #66BB6A;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); }
+
+        .header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--highlight);
+        }
+
+        /* Estilo para el icono de configuración, ahora como enlace */
+        .settings-link { /* Cambiamos de .settings-icon a .settings-link */
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            text-decoration: none; /* Elimina el subrayado */
+            display: inline-block; /* Para aplicar transformaciones */
+        }
+
+        .settings-link:hover {
+            color: var(--highlight);
+            transform: rotate(30deg);
+        }
+
+        .profile-container { max-width: 800px; margin: 2rem auto; padding: 0 1.5rem; }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--accent);
+        }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--highlight);
+            margin: 0 auto 1rem;
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+        }
+        .profile-name {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--highlight);
+            text-shadow: 0 0 5px rgba(255, 193, 7, 0.2);
+        }
+        .profile-bio {
+            max-width: 500px;
+            margin: 0 auto;
+            opacity: 0.9;
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid var(--accent);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background-color: var(--accent);
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--highlight);
+            margin-bottom: 0.3rem;
+        }
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            color: var(--text);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1.2rem;
+            color: var(--highlight);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Estilo para los elementos del menú, ahora como enlaces */
+        .menu-item-link { /* Nueva clase para los enlaces del menú */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 1.5rem;
+            background-color: var(--surface);
+            margin-bottom: 0.8rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--accent);
+            text-decoration: none; /* Elimina el subrayado por defecto */
+            color: var(--text); /* Asegura que el texto del enlace tenga el color deseado */
+        }
+        .menu-item-link:hover {
+            background-color: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .menu-item-link span {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.1rem;
+        }
+        .menu-item-link i {
+            width: 24px;
+            text-align: center;
+            color: var(--highlight);
+            font-size: 1.2rem;
+        }
+        /* Color específico para el icono de cerrar sesión */
+        .menu-item-link .fa-sign-out-alt {
+            color: var(--error);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            .profile-header {
+                padding: 1.5rem;
+            }
+            .profile-name {
+                font-size: 1.8rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .logo {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <div>
+            <a href="index.html" class="settings-link">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Mi foto" class="profile-avatar">
+            <h1 class="profile-name">DuelMaster22</h1>
+            <p class="profile-bio">Coleccionista profesional de cartas Yu-Gi-Oh! desde 2015. Especializado en cartas de la primera edición.</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">42</div>
+                <div class="stat-label">Transacciones</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">4.8</div>
+                <div class="stat-label">Reputación</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">15</div>
+                <div class="stat-label">Cartas activas</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Menú</h2>
+        <div class="profile-menu">
+            <a href="editarperfil.html" class="menu-item-link">
+                <span><i class="fas fa-edit"></i> Editar perfil</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a href="historial.html" class="menu-item-link">
+                <span><i class="fas fa-history"></i> Historial de transacciones</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a href="notif.html" class="menu-item-link">
+                <span><i class="fas fa-bell"></i> Notificaciones</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a href="config.html" class="menu-item-link">
+                <span><i class="fas fa-lock"></i> Configuración de seguridad</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a href="soporte.html" class="menu-item-link">
+                <span><i class="fas fa-question-circle"></i> Ayuda y soporte</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a href="Login.html" class="menu-item-link" id="logoutLink">
+                <span><i class="fas fa-sign-out-alt"></i> Cerrar sesión</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad para el botón "Cerrar sesión" (requiere JavaScript para la confirmación)
+        document.getElementById('logoutLink').addEventListener('click', (event) => {
+            const confirmLogout = confirm('¿Estás seguro de que quieres cerrar sesión?');
+            if (!confirmLogout) {
+                event.preventDefault(); // Detiene la navegación si el usuario cancela
+            }
+        });
+    </script>
+</body>
+</html>

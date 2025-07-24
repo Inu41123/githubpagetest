@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); }
+        
+        .header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4); /* Añadido para consistencia */
+        }
+        .logo { font-weight: bold; font-size: 1.8rem; color: var(--highlight); } /* Aumentado a 1.8rem para consistencia */
+        
+        /* Estilo para el icono de cerrar, ahora como enlace */
+        .close-link { /* Nueva clase para el enlace de cerrar */
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            text-decoration: none; /* Elimina el subrayado */
+            display: inline-block;
+            padding: 0.2rem; /* Pequeño padding para área de clic */
+        }
+        .close-link:hover {
+            color: var(--primary);
+        }
+
+        .edit-container { max-width: 600px; margin: 2rem auto; padding: 0 1.5rem; }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-control { width: 100%; padding: 0.8rem 1rem; background-color: var(--accent); border: 1px solid var(--secondary); border-radius: 8px; /* Aumentado a 8px para consistencia */ color: var(--text); transition: all 0.3s; /* Añadido para transiciones suaves */ }
+        .form-control:focus { outline: none; border-color: var(--highlight); box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3); /* Añadido para consistencia */ }
+        
+        .avatar-upload { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; }
+        .avatar-preview { width: 120px; /* Aumentado para consistencia */ height: 120px; /* Aumentado para consistencia */ border-radius: 50%; object-fit: cover; border: 4px solid var(--highlight); /* Aumentado para consistencia */ box-shadow: 0 0 15px rgba(255, 193, 7, 0.4); /* Añadido para consistencia */ }
+        
+        /* Estilo para el botón de subir foto, ahora como enlace */
+        .upload-link { /* Nueva clase para el enlace de subir */
+            padding: 0.8rem 1.5rem; /* Ajustado padding */
+            background-color: var(--surface);
+            border: 1px solid var(--highlight);
+            border-radius: 8px; /* Ajustado a 8px */
+            color: var(--highlight);
+            cursor: pointer;
+            font-weight: 600; /* Añadido para consistencia */
+            transition: all 0.3s;
+            text-decoration: none; /* Elimina el subrayado */
+            display: inline-flex; /* Para alinear ícono y texto */
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .upload-link:hover {
+            background-color: var(--accent);
+            color: white; /* Cambio de color al hacer hover */
+            border-color: var(--primary); /* Cambio de color del borde */
+            transform: translateY(-2px); /* Efecto ligero */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Sombra al hacer hover */
+        }
+        .upload-link i {
+            font-size: 1rem; /* Ajuste del tamaño del ícono */
+        }
+        
+        /* Estilos de botones (ahora como enlaces) */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px; /* Aumentado a 8px */
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none; /* Elimina el subrayado */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.05rem; /* Ajustado tamaño de fuente */
+        }
+        .btn-primary {
+            background-color: var(--highlight);
+            color: var(--bg);
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2); /* Sombra para consistencia */
+        }
+        .btn-primary:hover {
+            background-color: #FFA000;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 193, 7, 0.4);
+        }
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--highlight);
+            color: var(--highlight);
+        }
+        .btn-outline:hover {
+            background-color: var(--highlight);
+            color: var(--bg);
+            border-color: var(--highlight);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 193, 7, 0.2);
+        }
+        
+        .actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 1.5rem; }
+            .edit-container { margin: 1.5rem auto; padding: 0 1rem; }
+            .avatar-upload { flex-direction: column; text-align: center; gap: 1rem; }
+            .avatar-preview { margin-bottom: 0.5rem; }
+            .actions { flex-direction: column; gap: 0.8rem; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <div>
+            <a href="perfil.html" class="close-link">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </header>
+
+    <div class="edit-container">
+        <h1 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--highlight);">Editar perfil</h1>
+        
+        <div class="avatar-upload">
+            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Avatar" class="avatar-preview">
+            <div>
+                <a href="#" class="upload-link">
+                    <i class="fas fa-camera"></i> Cambiar foto
+                </a>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">Formatos: JPG, PNG (max 2MB)</p>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="username">Nombre de usuario</label>
+            <input type="text" id="username" class="form-control" value="DuelMaster22">
+        </div>
+        
+        <div class="form-group">
+            <label for="bio">Biografía</label>
+            <textarea id="bio" class="form-control" rows="4">Coleccionista profesional de cartas Yu-Gi-Oh! desde 2015. Especializado en cartas de la primera edición.</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Ubicación</label>
+            <input type="text" id="location" class="form-control" value="Domino City">
+        </div>
+        
+        <div class="form-group">
+            <label>Mostrar ubicación en mi perfil</label>
+            <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="radio" name="showLocation" checked> Sí
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="radio" name="showLocation"> No
+                </label>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="perfil.html" class="btn btn-outline">Cancelar</a>
+            <a href="perfil.html" class="btn btn-primary">Guardar cambios</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Intercambio - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background-color: var(--primary);
+            padding: 1.5rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .exchange-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .exchange-arrow {
+            font-size: 2.5rem;
+            color: var(--highlight);
+        }
+
+        .card-section {
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .card-image {
+            width: 100%;
+            max-width: 200px;
+            height: 300px;
+            background-color: var(--accent);
+            margin: 0 auto 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--highlight);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-label {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .card-details {
+            margin-top: 1rem;
+        }
+        
+        .card-details h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-details p {
+            color: var(--highlight);
+            font-weight: 500;
+        }
+
+        .meetup-details {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid var(--highlight);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .detail-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-icon {
+            color: var(--highlight);
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background-color: white;
+            margin: 1rem auto;
+            padding: 1rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+        }
+        
+        .qr-note {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .confirm-btn {
+            background-color: var(--highlight);
+            color: var(--bg);
+            border: none;
+        }
+        
+        .confirm-btn:hover {
+            background-color: #FFA000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+        
+        .cancel-btn {
+            background-color: transparent;
+            border: 2px solid var(--error);
+            color: var(--error);
+        }
+        
+        .cancel-btn:hover {
+            background-color: rgba(239, 83, 80, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            .exchange-container {
+                flex-direction: column;
+            }
+            
+            .exchange-arrow {
+                transform: rotate(90deg);
+                margin: 1rem 0;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Confirmar Intercambio</h1>
+            <p>Revisa los detalles antes de confirmar</p>
+        </div>
+        
+        <div class="content">
+            <div class="exchange-container">
+                <div class="card-section">
+                    <div class="card-label">Tú das</div>
+                    <div class="card-image"></div>
+                    <div class="card-details">
+                        <h3>Dragón Blanco de Ojos Azules</h3>
+                        <p>Edición LOB-001 (NM)</p>
+                        <p>Valorado en: €45.99</p>
+                    </div>
+                </div>
+                
+                <div class="exchange-arrow">
+                    ⇄
+                </div>
+                
+                <div class="card-section">
+                    <div class="card-label">Recibes</div>
+                    <div class="card-image"></div>
+                    <div class="card-details">
+                        <h3>Mago Oscuro</h3>
+                        <p>Edición LOB-005 (NM)</p>
+                        <p>Valorado en: €38.50</p>
+                        <p>+ €7.49 en efectivo</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="meetup-details">
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <h3>Punto de encuentro</h3>
+                        <p>Café Duelista, Calle Monstruo 123, Local 45</p>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div>
+                        <h3>Fecha y hora</h3>
+                        <p>Sábado 15 Junio, 2024 · 17:00 - 17:30</p>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h3>Duelista</h3>
+                        <p>DuelMaster22 (4.8★ - 32 transacciones)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="qr-section">
+                <h2>Código de Verificación</h2>
+                <div class="qr-code">
+                    <!-- QR real iría aquí -->
+                    <i class="fas fa-qrcode" style="font-size: 5rem;"></i>
+                </div>
+                <p class="qr-note">Ambos usuarios deben escanear este código al encontrarse para confirmar el intercambio</p>
+            </div>
+            
+            <div class="actions">
+                <button class="action-btn confirm-btn">Confirmar Intercambio</button>
+                <button class="action-btn cancel-btn">Cancelar Transacción</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

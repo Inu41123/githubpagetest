@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportar Carta - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+            --error: #EF5350;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--highlight);
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--highlight);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .card-preview {
+            background-color: var(--surface);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .card-image {
+            width: 150px;
+            height: 220px;
+            background-color: var(--accent);
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-info {
+            flex-grow: 1;
+            min-width: 250px;
+        }
+        
+        .card-title {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--highlight);
+        }
+        
+        .card-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            font-size: 0.9rem;
+        }
+        
+        .meta-label {
+            color: rgba(224, 224, 224, 0.7);
+            margin-bottom: 0.2rem;
+        }
+        
+        .report-form {
+            background-color: var(--surface);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-label span {
+            color: var(--error);
+        }
+        
+        .reason-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .reason-option {
+            background-color: var(--accent);
+            border: 1px solid var(--secondary);
+            border-radius: 6px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .reason-option:hover {
+            border-color: var(--highlight);
+        }
+        
+        .reason-option.selected {
+            border-color: var(--error);
+            background-color: rgba(239, 83, 80, 0.1);
+        }
+        
+        .reason-option input {
+            display: none;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background-color: var(--accent);
+            border: 1px solid var(--secondary);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--error);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #D32F2F;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 1rem;
+            }
+            
+            .card-preview {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .card-meta {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="logo">DUEL MARKET</div>
+        <div style="width: 40px;"></div>
+    </header>
+
+    <div class="main-container">
+        <h1 class="section-title">Reportar Carta</h1>
+        
+        <div class="card-preview">
+            <div class="card-image">
+                <img src="https://images.ygoprodeck.com/images/cards/74677422.jpg" alt="Red-Eyes Black Dragon">
+            </div>
+            <div class="card-info">
+                <h2 class="card-title">Red-Eyes Black Dragon</h2>
+                <div class="card-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Publicado por</div>
+                        <div>DuelMaster22</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Precio</div>
+                        <div>75.99€</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Publicación ID</div>
+                        <div>#78945</div>
+                    </div>
+                </div>
+                <p>Esta publicación ha sido reportada 3 veces en los últimos 7 días</p>
+            </div>
+        </div>
+        
+        <form class="report-form">
+            <div class="form-group">
+                <label class="form-label">Motivo del reporte <span>*</span></label>
+                <div class="reason-options">
+                    <label class="reason-option">
+                        <input type="radio" name="reason" value="fake" required>
+                        <i class="fas fa-fake" style="color: var(--error); margin-right: 0.5rem;"></i>
+                        Carta falsificada
+                    </label>
+                    <label class="reason-option">
+                        <input type="radio" name="reason" value="price">
+                        <i class="fas fa-euro-sign" style="color: var(--error); margin-right: 0.5rem;"></i>
+                        Precio abusivo
+                    </label>
+                    <label class="reason-option">
+                        <input type="radio" name="reason" value="condition">
+                        <i class="fas fa-search" style="color: var(--error); margin-right: 0.5rem;"></i>
+                        Estado incorrecto
+                    </label>
+                    <label class="reason-option">
+                        <input type="radio" name="reason" value="other">
+                        <i class="fas fa-flag" style="color: var(--error); margin-right: 0.5rem;"></i>
+                        Otro motivo
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="reportDetails" class="form-label">Explicación detallada <span>*</span></label>
+                <textarea id="reportDetails" class="form-control" placeholder="Describa por qué está reportando esta carta..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="userExperience" class="form-label">¿Has interactuado con este vendedor?</label>
+                <select id="userExperience" class="form-control">
+                    <option value="">Seleccionar...</option>
+                    <option value="yes-good">Sí, experiencia positiva</option>
+                    <option value="yes-bad">Sí, experiencia negativa</option>
+                    <option value="no">No, nunca</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i> Enviar Reporte
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Selección de motivo con feedback visual
+        document.querySelectorAll('.reason-option').forEach(option => {
+            const radio = option.querySelector('input');
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.reason-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                if(this.checked) {
+                    option.classList.add('selected');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

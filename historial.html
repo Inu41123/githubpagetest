@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+            --success: #66BB6A;
+            --warning: #FFA726;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* === HEADER === */
+        .header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4); /* Añadido para consistencia */
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.8rem; /* Aumentado para consistencia */
+            color: var(--highlight);
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 1px;
+        }
+        
+        /* Estilo para el botón de retroceso, ahora como enlace */
+        .back-link { /* Nueva clase para el enlace de retroceso */
+            background: none;
+            border: none;
+            color: var(--highlight);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            text-decoration: none; /* Elimina el subrayado */
+            display: inline-block;
+            padding: 0.5rem; /* Pequeño padding para área de clic */
+        }
+        .back-link:hover {
+            color: white; /* Cambio de color al hacer hover */
+        }
+
+        /* === MAIN CONTENT === */
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--highlight);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+        
+        .time-filter {
+            display: flex;
+            gap: 0.5rem;
+            background-color: var(--surface);
+            padding: 0.5rem;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap; /* Para responsive */
+            justify-content: center; /* Centrar botones */
+        }
+        
+        .time-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            background: none;
+            color: var(--text);
+        }
+        
+        .time-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .time-btn:not(.active):hover {
+            background-color: var(--accent);
+        }
+
+        /* === TRANSACTION LIST === */
+        /* Estilo para la tarjeta de transacción, ahora como enlace */
+        .transaction-card-link { /* Nueva clase para el enlace de la tarjeta */
+            background-color: var(--surface);
+            border-radius: 10px;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            text-decoration: none; /* Elimina el subrayado */
+            color: var(--text); /* Asegura el color del texto */
+            margin-bottom: 0.8rem; /* Separación entre tarjetas */
+        }
+        
+        .transactions-list {
+            display: flex;
+            flex-direction: column;
+            /* gap: 0.8rem;  Ya no es necesario si cada <a> tiene margin-bottom */
+        }
+        
+        .transaction-card-link:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-left-color: var(--highlight); /* Borde al hacer hover */
+        }
+        
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+        }
+        
+        .icon-sold {
+            background-color: rgba(118, 25, 25, 0.2);
+            color: var(--primary);
+        }
+        
+        .icon-bought {
+            background-color: rgba(66, 165, 245, 0.2);
+            color: #42A5F5;
+        }
+        
+        .icon-trade {
+            background-color: rgba(255, 167, 38, 0.2);
+            color: var(--warning);
+        }
+        
+        .transaction-info {
+            flex-grow: 1;
+        }
+        
+        .transaction-title {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            color: var(--text); /* Asegura que el título sea visible */
+        }
+        
+        .transaction-meta {
+            font-size: 0.9rem;
+            color: rgba(224, 224, 224, 0.7);
+        }
+        
+        .transaction-amount {
+            font-weight: bold;
+            text-align: right;
+            min-width: 100px;
+            flex-shrink: 0; /* Evita que se encoja */
+        }
+        
+        .amount-positive {
+            color: var(--success);
+        }
+        
+        .amount-negative {
+            color: var(--primary);
+        }
+        
+        .amount-neutral {
+            color: var(--warning);
+        }
+        
+        .transaction-status {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            margin-left: 1rem;
+            flex-shrink: 0; /* Evita que se encoja */
+        }
+        
+        .status-completed {
+            background-color: rgba(102, 187, 106, 0.2);
+            color: var(--success);
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 167, 38, 0.2);
+            color: var(--warning);
+        }
+        
+        .status-cancelled {
+            background-color: rgba(239, 83, 80, 0.2);
+            color: var(--error);
+        }
+
+        /* === PAGINATION === */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        /* Estilo para los botones de paginación, ahora como enlaces */
+        .page-link { /* Nueva clase para el enlace de paginación */
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px; /* Ajustado a 8px */
+            background-color: var(--surface);
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none; /* Elimina el subrayado */
+            color: var(--text); /* Asegura el color del texto */
+            font-weight: 500;
+        }
+        
+        .page-link.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .page-link:hover:not(.active) {
+            border-color: var(--highlight);
+            background-color: var(--accent);
+        }
+
+        /* === EMPTY STATE === */
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--highlight);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-state p {
+            max-width: 400px;
+            margin: 0 auto;
+            opacity: 0.7;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .header { padding: 0.8rem 1rem; }
+            .logo { font-size: 1.5rem; }
+            .back-link { font-size: 1rem; }
+            .main-container { margin: 1.5rem auto; padding: 0 1rem; }
+            .section-title { font-size: 1.6rem; }
+            .time-filter { flex-direction: column; align-items: stretch; border-radius: 10px; padding: 0.8rem; }
+            .time-btn { border-radius: 8px; text-align: center; }
+            .transaction-card-link { flex-wrap: wrap; padding: 1rem; }
+            .transaction-amount {
+                width: 100%;
+                text-align: left;
+                margin-top: 0.5rem;
+                padding-left: 50px;
+                order: 3; /* Asegura que el monto vaya debajo */
+            }
+            .transaction-status {
+                margin-left: 0; /* Quita el margen a la izquierda */
+                margin-top: 0.5rem; /* Añade margen arriba para separarlo */
+                order: 4; /* Asegura que el estado vaya debajo */
+            }
+            .transaction-info {
+                width: calc(100% - 50px); /* Ajusta ancho para el ícono */
+            }
+            .pagination { flex-wrap: wrap; }
+            .page-link { width: 35px; height: 35px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="perfil.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="logo">DUEL MARKET</div>
+        <div style="width: 40px;"></div> </header>
+
+    <div class="main-container">
+        <div class="section-header">
+            <h1 class="section-title">Historial de Transacciones</h1>
+        </div>
+
+        <div class="time-filter">
+            <button class="time-btn active">Todo</button>
+            <button class="time-btn">Este mes</button>
+            <button class="time-btn">Últimos 3 meses</button>
+            <button class="time-btn">2023</button>
+        </div>
+
+        <div class="transactions-list">
+            <a href="transaction-detail.html" class="transaction-card-link">
+                <div class="transaction-icon icon-sold">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-title">Venta: Dragón Blanco de Ojos Azules</div>
+                    <div class="transaction-meta">Comprador: DuelMaster22 · 15 Jun 2023</div>
+                </div>
+                <div class="transaction-amount amount-positive">+ €45.99</div>
+                <div class="transaction-status status-completed">Completada</div>
+            </a>
+
+            <a href="transaction-detail.html" class="transaction-card-link">
+                <div class="transaction-icon icon-bought">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-title">Compra: Mago Oscuro</div>
+                    <div class="transaction-meta">Vendedor: YugiFan · 12 Jun 2023</div>
+                </div>
+                <div class="transaction-amount amount-negative">- €38.50</div>
+                <div class="transaction-status status-pending">Pendiente</div>
+            </a>
+
+            <a href="transaction-detail.html" class="transaction-card-link">
+                <div class="transaction-icon icon-trade">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-title">Intercambio: Exodia por Blue-Eyes</div>
+                    <div class="transaction-meta">Usuario: KaibaCorp · 5 Jun 2023</div>
+                </div>
+                <div class="transaction-amount amount-neutral">Intercambio</div>
+                <div class="transaction-status status-completed">Completado</div>
+            </a>
+
+            <a href="transaction-detail.html" class="transaction-card-link">
+                <div class="transaction-icon icon-sold">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-title">Venta: Red-Eyes Black Dragon</div>
+                    <div class="transaction-meta">Comprador: JoeyWheeler · 28 May 2023</div>
+                </div>
+                <div class="transaction-amount amount-positive">+ €60.00</div>
+                <div class="transaction-status status-cancelled">Cancelada</div>
+            </a>
+
+            <a href="transaction-detail.html" class="transaction-card-link">
+                <div class="transaction-icon icon-bought">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-title">Compra: Dark Magician Girl</div>
+                    <div class="transaction-meta">Vendedor: Mana · 20 May 2023</div>
+                </div>
+                <div class="transaction-amount amount-negative">- €52.75</div>
+                <div class="transaction-status status-completed">Completada</div>
+            </a>
+        </div>
+
+        <div class="pagination">
+            <a href="#" class="page-link"><i class="fas fa-chevron-left"></i></a>
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
+        </div>
+
+        </div>
+
+    <script>
+        // Filtrado por tiempo (este sigue siendo JavaScript ya que es interactividad, no solo navegación)
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelector('.time-btn.active').classList.remove('active');
+                this.classList.add('active');
+                // Aquí iría la lógica real de filtrado de las transacciones mostradas
+            });
+        });
+    </script>
+</body>
+</html>

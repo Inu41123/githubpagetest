@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar Cartas - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* === HEADER === */
+        .header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--highlight);
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* === MAIN CONTENT === */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                        url('https://images.unsplash.com/photo-1637858868799-7f26a0640eb6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: var(--highlight);
+        }
+        
+        .quick-search {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .quick-btn {
+            padding: 0.6rem 1.2rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--highlight);
+            border-radius: 50px;
+            color: var(--highlight);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-btn:hover {
+            background-color: var(--highlight);
+            color: var(--bg);
+        }
+
+        /* === TRENDING SECTION === */
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--highlight);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+        
+        .trending-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .trending-card {
+            background-color: var(--surface);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid var(--accent);
+        }
+        
+        .trending-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--highlight);
+        }
+        
+        .trending-image {
+            height: 200px;
+            background-color: var(--accent);
+            position: relative;
+        }
+        
+        .trending-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .trending-badge {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .trending-content {
+            padding: 1.2rem;
+        }
+        
+        .trending-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .trending-price {
+            color: var(--highlight);
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        
+        .trending-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: rgba(224, 224, 224, 0.7);
+        }
+        
+        .view-btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .view-btn:hover {
+            background-color: #8d1f1f;
+        }
+
+        /* === CATEGORIES SECTION === */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .category-card {
+            background-color: var(--surface);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid var(--accent);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--highlight);
+        }
+        
+        .category-icon {
+            font-size: 2rem;
+            color: var(--highlight);
+            margin-bottom: 1rem;
+        }
+        
+        .category-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-count {
+            font-size: 0.8rem;
+            color: rgba(224, 224, 224, 0.7);
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 992px) {
+            .trending-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .trending-grid, .categories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .trending-grid, .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <div class="header-actions">
+            <button class="header-btn">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="header-btn">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Explora el mercado de cartas Yu-Gi-Oh!</h1>
+            <p>Encuentra las cartas más buscadas por la comunidad de duelistas</p>
+            
+            <div class="quick-search">
+                <button class="quick-btn">Monstruos</button>
+                <button class="quick-btn">Cartas Mágicas</button>
+                <button class="quick-btn">Ultra Raras</button>
+                <button class="quick-btn">Cercanas</button>
+            </div>
+        </div>
+
+        <!-- Trending Section -->
+        <h2 class="section-title">Tendencias esta semana</h2>
+        <div class="trending-grid">
+            <!-- Carta 1 -->
+            <div class="trending-card">
+                <div class="trending-image">
+                    <img src="https://images.ygoprodeck.com/images/cards/89631139.jpg" alt="Blue-Eyes White Dragon">
+                    <div class="trending-badge">+12 ofertas</div>
+                </div>
+                <div class="trending-content">
+                    <h3 class="trending-title">Dragón Blanco de Ojos Azules</h3>
+                    <div class="trending-price">45.99€</div>
+                    <div class="trending-meta">
+                        <span><i class="fas fa-user"></i> DuelMaster22</span>
+                        <span><i class="fas fa-map-marker-alt"></i> 1.2km</span>
+                    </div>
+                    <button class="view-btn">Ver detalle</button>
+                </div>
+            </div>
+            
+            <!-- Carta 2 -->
+            <div class="trending-card">
+                <div class="trending-image">
+                    <img src="https://images.ygoprodeck.com/images/cards/46986414.jpg" alt="Dark Magician">
+                    <div class="trending-badge">Intercambio</div>
+                </div>
+                <div class="trending-content">
+                    <h3 class="trending-title">Mago Oscuro</h3>
+                    <p style="color: var(--highlight); font-style: italic;">Busca: Exodia</p>
+                    <div class="trending-meta">
+                        <span><i class="fas fa-user"></i> YugiFan</span>
+                        <span><i class="fas fa-map-marker-alt"></i> 0.8km</span>
+                    </div>
+                    <button class="view-btn">Ver detalle</button>
+                </div>
+            </div>
+            
+            <!-- Carta 3 -->
+            <div class="trending-card">
+                <div class="trending-image">
+                    <img src="https://images.ygoprodeck.com/images/cards/74677422.jpg" alt="Red-Eyes B. Dragon">
+                    <div class="trending-badge">+5 ofertas</div>
+                </div>
+                <div class="trending-content">
+                    <h3 class="trending-title">Dragón Negro de Ojos Rojos</h3>
+                    <div class="trending-price">32.50€</div>
+                    <div class="trending-meta">
+                        <span><i class="fas fa-user"></i> JoeyWheeler</span>
+                        <span><i class="fas fa-map-marker-alt"></i> 3.5km</span>
+                    </div>
+                    <button class="view-btn">Ver detalle</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Section -->
+        <h2 class="section-title">Explorar por categorías</h2>
+        <div class="categories-grid">
+            <!-- Categoría 1 -->
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-dragon"></i>
+                </div>
+                <h3 class="category-title">Monstruos</h3>
+                <p class="category-count">1,245 cartas</p>
+            </div>
+            
+            <!-- Categoría 2 -->
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3 class="category-title">Cartas Mágicas</h3>
+                <p class="category-count">856 cartas</p>
+            </div>
+            
+            <!-- Categoría 3 -->
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-traffic-light"></i>
+                </div>
+                <h3 class="category-title">Cartas de Trampa</h3>
+                <p class="category-count">723 cartas</p>
+            </div>
+            
+            <!-- Categoría 4 -->
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h3 class="category-title">Ultra Raras</h3>
+                <p class="category-count">328 cartas</p>
+            </div>
+            
+            <!-- Categoría 5 -->
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="category-title">Para Intercambio</h3>
+                <p class="category-count">512 cartas</p>
+            </div>
+            
+            <!-- Categoría 6 -->
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="category-title">Recién llegadas</h3>
+                <p class="category-count">89 cartas</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de búsqueda rápida
+        document.querySelectorAll('.quick-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                console.log('Búsqueda rápida:', this.textContent);
+                // Aquí iría la lógica de filtrado por categoría
+            });
+        });
+    </script>
+</body>
+</html>

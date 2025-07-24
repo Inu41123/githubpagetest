@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duel Market - Yu-Gi-Oh! Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Añade Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Variables de color importadas del login */
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107; /* Amarillo dorado, usado para botones y acentos */
+            --bg: #121212; /* Fondo oscuro principal */
+            --text: #E0E0E0; /* Color de texto claro */
+            --accent: #424242; /* Color de acento para elementos oscuros, como inputs */
+            --surface: #1E1E1E; /* Superficies, como contenedores */
+            --error: #EF5350;
+            --success: #66BB6A;
+        }
+
+        /* Reset y estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif; /* Usamos Roboto para consistencia */
+        }
+        body {
+            background-color: var(--bg); /* Fondo oscuro general */
+            color: var(--text); /* Texto claro general */
+        }
+
+        /* Header estilizado */
+        .header {
+            background-color: var(--surface); /* Fondo del header como superficie */
+            color: var(--text);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4); /* Sombra más pronunciada */
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.8rem; /* Un poco más grande para el logo */
+            color: var(--highlight); /* Dorado Yu-Gi-Oh! */
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Estilos de botones adaptados del login y ahora para enlaces */
+        .btn {
+            background-color: var(--highlight);
+            color: var(--bg); /* Texto oscuro para contrastar con el highlight */
+            font-size: 14px;
+            padding: 10px 20px; /* Ajustado el padding para el header */
+            border: none;
+            border-radius: 8px; /* Bordes más redondeados */
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none; /* Asegura que no tenga subrayado si se usa como <a> */
+            display: inline-block; /* Para que padding y margin funcionen bien */
+        }
+
+        .btn:hover {
+            background-color: #FFA000; /* Un dorado ligeramente más oscuro al pasar el ratón */
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary { /* Nuevo estilo para el botón "Mi perfil" */
+            background-color: transparent;
+            border: 2px solid var(--highlight);
+            color: var(--highlight);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--highlight); /* Mantiene el color del texto */
+        }
+
+        /* Sección hero */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.imgur.com/yugioh-hero-background.jpg'); /* Reemplaza con una imagen de Yu-Gi-Oh! de alta calidad */
+            color: var(--text);
+            padding: 4rem 1rem; /* Más padding para un mejor impacto */
+            text-align: center;
+            background-size: cover;
+            background-position: center; /* Centrar la imagen de fondo */
+            margin-bottom: 2rem; /* Espacio debajo del hero */
+        }
+
+        .hero h1 {
+            font-size: 3rem; /* Más grande para el título principal */
+            margin-bottom: 1rem;
+            color: var(--highlight); /* Título en dorado */
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Contenedor principal */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Mapa interactivo */
+        .live-map {
+            height: 400px;
+            background-color: var(--surface); /* Color de superficie */
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Sombra más suave */
+            border: 1px solid var(--accent); /* Borde sutil */
+        }
+
+        /* Estilos para los controles de Leaflet */
+        .leaflet-control {
+            background-color: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--accent) !important;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+        }
+
+        .leaflet-control-zoom a {
+            color: var(--text) !important;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--accent) !important;
+        }
+
+        .leaflet-control-zoom a:hover {
+            background-color: var(--accent);
+        }
+
+        .leaflet-bar a:last-child {
+            border-bottom-left-radius: 8px !important;
+            border-bottom-right-radius: 8px !important;
+        }
+
+        .leaflet-bar a:first-child {
+            border-top-left-radius: 8px !important;
+            border-top-right-radius: 8px !important;
+        }
+
+        /* Estilo para el buscador */
+        .leaflet-control-geocoder {
+            border-radius: 8px !important;
+            background: var(--surface) !important;
+            box-shadow: none !important;
+        }
+
+        .leaflet-control-geocoder-form input {
+            background: var(--accent) !important;
+            color: var(--text) !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 8px 12px !important;
+        }
+
+        .leaflet-control-geocoder-icon {
+            background-color: var(--highlight) !important;
+            border-radius: 8px !important;
+        }
+
+        .leaflet-control-geocoder-alternatives {
+            background: var(--surface) !important;
+            border: 1px solid var(--accent) !important;
+        }
+
+        .leaflet-control-geocoder-alternatives a {
+            color: var(--text) !important;
+            border-bottom: 1px solid var(--accent) !important;
+        }
+
+        .leaflet-control-geocoder-alternatives a:hover {
+            background-color: var(--accent) !important;
+        }
+
+        /* Feed de actividad */
+        .activity-feed {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.5rem; /* Más padding */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid var(--accent);
+        }
+
+        .activity-feed h2 {
+            margin-bottom: 1.5rem; /* Más espacio */
+            color: var(--highlight);
+            font-size: 1.8rem;
+        }
+
+        /* Enlace de actividad - para perfil de vendedor */
+        .activity-item-link { /* Nueva clase para el enlace de actividad */
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--accent); /* Borde más sutil */
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text);
+            text-decoration: none; /* Eliminar subrayado */
+            transition: background-color 0.3s ease;
+        }
+
+        .activity-item-link:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item-link:hover {
+            background-color: rgba(255, 193, 7, 0.05); /* Ligerísimo fondo al pasar el ratón */
+            cursor: pointer;
+        }
+
+        .activity-item-link img {
+            width: 50px; /* Imágenes de usuario un poco más grandes */
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary); /* Borde en color primario */
+        }
+
+        .activity-item-link p {
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .activity-item-link strong {
+            color: var(--highlight);
+        }
+
+        .activity-item-link small {
+            font-size: 0.85rem;
+            color: rgba(224, 224, 224, 0.7);
+        }
+
+        /* Sección de intercambios */
+        .trending-trades {
+            grid-column: 1 / -1;
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 2rem; /* Más padding */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid var(--accent);
+            margin-top: 1rem;
+        }
+
+        .trending-trades h2 {
+            margin-bottom: 0.5rem;
+            color: var(--highlight);
+            font-size: 2rem;
+        }
+
+        .trending-trades p {
+            color: rgba(224, 224, 224, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .trades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Tarjetas un poco más anchas */
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Enlace de tarjeta de intercambio */
+        .trade-card-link { /* Nueva clase para el enlace de tarjeta de intercambio */
+            background-color: var(--bg); /* Fondo de la tarjeta más oscuro */
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            text-decoration: none; /* Eliminar subrayado */
+            color: inherit; /* Hereda el color de texto del padre */
+            display: block; /* Para que ocupe todo el espacio de la cuadrícula */
+        }
+
+        .trade-card-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3); /* Sombra al pasar el ratón */
+        }
+
+        .trade-card-link img { /* Estilo específico para la imagen dentro del enlace */
+            width: 100%;
+            height: 180px; /* Imágenes un poco más altas */
+            object-fit: cover;
+        }
+
+        .trade-info {
+            padding: 1rem;
+            color: var(--text);
+        }
+
+        .trade-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--highlight);
+        }
+
+        .trade-info p {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            color: rgba(224, 224, 224, 0.8);
+        }
+
+        .trade-info small {
+            font-size: 0.8rem;
+            color: rgba(224, 224, 224, 0.7);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .hero {
+                padding: 3rem 1rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .logo {
+                font-size: 1.3rem;
+            }
+            .user-actions {
+                gap: 0.5rem;
+            }
+            .btn {
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+            .trending-trades {
+                padding: 1.5rem;
+            }
+            .trades-grid {
+                grid-template-columns: 1fr; /* Una columna en móviles */
+            }
+            .live-map {
+                height: 300px; /* Ajuste para móviles */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <div class="user-actions">
+            <a href="publicar.html" class="btn">Publicar carta</a>
+            <a href="perfil.html" class="btn btn-secondary">Mi perfil</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Conecta con duelistas cerca de ti</h1>
+        <p>Intercambia, compra y vende cartas en tiempo real</p>
+    </section>
+
+    <div class="main-container">
+        <section class="live-map" id="map"></section>
+
+        <aside class="activity-feed">
+            <h2>Actividad reciente</h2>
+
+            <a href="perfilvendedor.html" class="activity-item-link">
+                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Usuario"> <div>
+                    <p><strong>DuelMaster22</strong> intercambió <strong>Dragón Blanco</strong> por <strong>Mago Oscuro</strong></p>
+                    <small>Hace 15 min · 1.2km de ti</small>
+                </div>
+            </a>
+
+            <a href="perfilvendedor.html" class="activity-item-link">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Usuario"> <div>
+                    <p><strong>KaibaCorp</strong> vendió <strong>Exodia</strong> por €120</p>
+                    <small>Hace 30 min · 3.5km de ti</small>
+                </div>
+            </a>
+
+            <a href="perfilvendedor.html" class="activity-item-link">
+                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Usuario"> <div>
+                    <p><strong>YugiFan</strong> busca <strong>Fusión de Dragones</strong></p>
+                    <small>Hace 45 min · 0.8km de ti</small>
+                </div>
+            </a>
+        </aside>
+
+        <section class="trending-trades">
+            <h2>Intercambios cerca de ti</h2>
+            <p>Cartas que otros duelistas están buscando intercambiar</p>
+
+            <div class="trades-grid">
+                <a href="detallecarta.html" class="trade-card-link">
+                    <img src="https://via.placeholder.com/300x180?text=Drag%C3%B3n+Blanco" alt="Dragón Blanco"> <div class="trade-info">
+                        <h3>Dragón Blanco</h3>
+                        <p>Busca: Mago Oscuro</p>
+                        <small>2.1km de ti</small>
+                    </div>
+                </a>
+
+                <a href="detallecarta.html" class="trade-card-link">
+                    <img src="https://via.placeholder.com/300x180?text=Exodia" alt="Exodia"> <div class="trade-info">
+                        <h3>Exodia</h3>
+                        <p>Busca: €150 o Blue-Eyes</p>
+                        <small>3.7km de ti</small>
+                    </div>
+                </a>
+
+                <a href="detallecarta.html" class="trade-card-link">
+                    <img src="https://via.placeholder.com/300x180?text=Dark+Magician" alt="Dark Magician"> <div class="trade-info">
+                        <h3>Dark Magician</h3>
+                        <p>Busca: Mirror Force</p>
+                        <small>1.5km de ti</small>
+                    </div>
+                </a>
+
+                <a href="detallecarta.html" class="trade-card-link">
+                    <img src="https://via.placeholder.com/300x180?text=Red+Dragon" alt="Red Dragon"> <div class="trade-info">
+                        <h3>Red Dragon</h3>
+                        <p>Busca: Summoned Skull</p>
+                        <small>0.5km de ti</small>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Añade Leaflet JS y el plugin de geocoder -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    
+    <script>
+        // Inicializar el mapa cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Crear el mapa (centrado en Madrid como ejemplo)
+            const map = L.map('map').setView([40.4168, -3.7038], 12);
+            
+            // Añadir capa de tiles con estilo oscuro (usando CartoDB.DarkMatter)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+            
+            // Marcadores de ejemplo (con iconos personalizados)
+            const duelists = [
+                {
+                    name: "DuelMaster22",
+                    position: [40.4268, -3.7138],
+                    card: "Dragón Blanco",
+                    distance: "1.2km",
+                    avatar: "https://randomuser.me/api/portraits/men/22.jpg"
+                },
+                {
+                    name: "KaibaCorp",
+                    position: [40.4068, -3.6938],
+                    card: "Exodia",
+                    distance: "3.5km",
+                    avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+                },
+                {
+                    name: "YugiFan",
+                    position: [40.4168, -3.7038],
+                    card: "Fusión de Dragones",
+                    distance: "0.8km",
+                    avatar: "https://randomuser.me/api/portraits/men/33.jpg"
+                }
+            ];
+            
+            // Crear icono personalizado
+            const customIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<i class="fas fa-map-marker-alt" style="color: var(--highlight); font-size: 20px;"></i>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30]
+            });
+            
+            // Añadir marcadores al mapa
+            duelists.forEach(duelist => {
+                const marker = L.marker(duelist.position, {
+                    icon: customIcon,
+                    title: duelist.name
+                }).addTo(map);
+                
+                // Añadir popup con información
+                marker.bindPopup(`
+                    <div style="color: var(--text);">
+                        <img src="${duelist.avatar}" style="width:50px; height:50px; border-radius:50%; border:2px solid var(--primary); object-fit:cover;">
+                        <h3 style="color: var(--highlight); margin:5px 0;">${duelist.name}</h3>
+                        <p>Ofrece: <strong>${duelist.card}</strong></p>
+                        <small>${duelist.distance} de ti</small>
+                    </div>
+                `);
+            });
+            
+            // Añadir control de búsqueda
+            L.Control.geocoder({
+                defaultMarkGeocode: false,
+                placeholder: "Buscar ubicación...",
+                errorMessage: "Ubicación no encontrada",
+                showResultIcons: true,
+                collapsed: false,
+                position: 'topleft',
+                style: 'bar'
+            })
+            .on('markgeocode', function(e) {
+                map.fitBounds(e.geocode.bbox);
+            })
+            .addTo(map);
+            
+            // Añadir botón para geolocalización
+            L.control.locate({
+                position: 'topleft',
+                drawCircle: true,
+                follow: true,
+                setView: 'untilPanOrZoom',
+                keepCurrentZoomLevel: true,
+                markerStyle: {
+                    weight: 1,
+                    opacity: 0.8,
+                    fillOpacity: 0.8,
+                    fillColor: '#761919'
+                },
+                circleStyle: {
+                    weight: 1,
+                    fillColor: '#761919',
+                    fillOpacity: 0.1
+                },
+                icon: 'fas fa-location-arrow',
+                iconLoading: 'fas fa-spinner fa-spin',
+                metric: true,
+                strings: {
+                    title: "Mi ubicación",
+                    popup: "Estás dentro de {distance} {unit} de este punto",
+                    outsideMapBoundsMsg: "Parece que estás fuera de los límites del mapa"
+                },
+                locateOptions: {
+                    maxZoom: 16,
+                    watch: true,
+                    enableHighAccuracy: true,
+                    maximumAge: 10000,
+                    timeout: 10000
+                }
+            }).addTo(map);
+        });
+    </script>
+</body>
+</html>

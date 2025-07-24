@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar Carta - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+            --error: #EF5350;
+            --success: #66BB6A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--highlight);
+            font-family: 'Press Start 2P', cursive, sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Botón de encabezado (cancelar) */
+        /* Convertimos la clase en un estilo para enlace que parece botón */
+        .header-btn {
+            background-color: var(--primary);
+            color: white;
+            font-size: 14px;
+            padding: 10px 20px;
+            border: none; /* Asegura que no tenga borde de botón */
+            border-radius: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none; /* Elimina el subrayado por defecto del enlace */
+        }
+
+        .header-btn:hover {
+            background-color: #5a1414;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Form Container */
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            color: var(--highlight);
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        /* Form Elements */
+        .form-card {
+            background-color: var(--surface);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--accent);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-label.required::after {
+            content: '*';
+            color: var(--error);
+            margin-left: 0.3rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background-color: var(--accent);
+            border: 1px solid var(--secondary);
+            border-radius: 8px;
+            color: var(--text);
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--highlight);
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+        }
+
+        /* Radio & Checkbox Groups */
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .option-item input[type="radio"],
+        .option-item input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--highlight);
+            border-radius: 50%;
+            background-color: var(--accent);
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            display: grid;
+            place-content: center;
+        }
+
+        .option-item input[type="radio"]::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.2s ease-in-out;
+            box-shadow: inset 1em 1em var(--highlight);
+        }
+
+        .option-item input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        .option-item input[type="checkbox"] {
+            border-radius: 4px;
+        }
+
+        .option-item input[type="checkbox"]::before {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--bg);
+            font-size: 10px;
+            transform: scale(0);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .option-item input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        .option-item input[type="radio"]:checked,
+        .option-item input[type="checkbox"]:checked {
+            border-color: var(--highlight);
+            background-color: var(--highlight);
+        }
+
+        /* Image Upload */
+        .image-upload {
+            border: 2px dashed var(--highlight);
+            background-color: rgba(255, 193, 7, 0.05);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 1rem 0;
+        }
+
+        .image-upload:hover {
+            border-color: var(--primary);
+            background-color: rgba(118, 25, 25, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--highlight);
+            margin-bottom: 1rem;
+        }
+
+        /* Price Conditional */
+        .price-container {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Submit Button (ahora como enlace) */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--highlight);
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+            text-decoration: none; /* Importante para que no se subraye */
+        }
+
+        .submit-btn:hover {
+            background-color: #FFA000;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        /* Preview de imágenes */
+        #preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+            background-color: var(--accent);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px dashed var(--highlight);
+        }
+
+        #preview-container div {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background: var(--surface);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--secondary);
+        }
+
+        #preview-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #preview-container .remove-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--error);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .option-group {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+            .form-title {
+                font-size: 1.5rem;
+            }
+            .logo {
+                font-size: 1.3rem;
+            }
+            .header-btn {
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <div class="header-actions">
+            <a href="index.html" class="header-btn">
+                <i class="fas fa-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </header>
+
+    <main class="form-container">
+        <h1 class="form-title">Publicar Nueva Carta</h1>
+
+        <form class="form-card" id="publicarCartaForm">
+            <div class="form-group">
+                <label for="card-name" class="form-label required">Nombre de la carta</label>
+                <input type="text" id="card-name" class="form-input" placeholder="Ej: Dragón Blanco de Ojos Azules" required>
+            </div>
+
+            <div class="form-group">
+                <label for="card-rarity" class="form-label required">Rareza</label>
+                <select id="card-rarity" class="form-select" required>
+                    <option value="">Seleccionar rareza</option>
+                    <option value="common">Común</option>
+                    <option value="rare">Rara</option>
+                    <option value="super">Súper Rara</option>
+                    <option value="ultra">Ultra Rara</option>
+                    <option value="secret">Secreta</option>
+                    <option value="ghost">Ghost Rara</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">Estado</label>
+                <div class="option-group">
+                    <label class="option-item">
+                        <input type="radio" name="condition" value="new" required>
+                        <span>Nuevo (NM/M)</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="condition" value="used">
+                        <span>Usado (LP/MP)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="card-language" class="form-label required">Idioma</label>
+                <select id="card-language" class="form-select" required>
+                    <option value="">Seleccionar idioma</option>
+                    <option value="es">Español</option>
+                    <option value="en">Inglés</option>
+                    <option value="jp">Japonés</option>
+                    <option value="de">Alemán</option>
+                    <option value="fr">Francés</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">Tipo de transacción</label>
+                <div class="option-group">
+                    <label class="option-item">
+                        <input type="radio" name="transaction" value="sale" required>
+                        <span>Venta</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="transaction" value="trade">
+                        <span>Intercambio</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="transaction" value="both">
+                        <span>Ambos</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group" id="priceField" style="display: none;">
+                <label for="card-price" class="form-label">Precio (€)</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <span style="position: absolute; left: 1rem; color: var(--highlight);">€</span>
+                    <input type="number" id="card-price" class="form-input" placeholder="0.00" style="padding-left: 2.5rem;">
+                </div>
+            </div>
+
+            <div class="form-group" id="wantedField" style="display: none;">
+                <label for="wanted-card" class="form-label">Carta buscada (opcional)</label>
+                <input type="text" id="wanted-card" class="form-input" placeholder="Ej: Mago Oscuro">
+            </div>
+
+            <div class="form-group">
+                <label for="card-description" class="form-label">Descripción adicional</label>
+                <textarea id="card-description" class="form-textarea" rows="4" placeholder="Detalles sobre el estado, edición, o condiciones especiales..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">Imágenes de la carta</label>
+                <input type="file" id="image-upload-input" accept="image/*" multiple style="display: none;">
+                <div class="image-upload" id="imageUploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <p>Arrastra imágenes aquí o haz clic para seleccionar</p>
+                    <small style="color: rgba(224, 224, 224, 0.7);">Máximo 3 imágenes (frontal, reverso, detalle)</small>
+                </div>
+                <div id="preview-container" style="display: flex; margin-top: 1rem;">
+                    </div>
+            </div>
+
+            <a href="main.html" class="submit-btn" id="publicarBtn">
+                <i class="fas fa-share-square"></i> Publicar Carta
+            </a>
+        </form>
+    </main>
+
+    <script>
+        // Funcionalidad para mostrar/ocultar campos condicionales (ya existente)
+        document.querySelectorAll('input[name="transaction"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const priceField = document.getElementById('priceField');
+                const wantedField = document.getElementById('wantedField');
+
+                if(this.value === 'sale') {
+                    priceField.style.display = 'block';
+                    wantedField.style.display = 'none';
+                } else if(this.value === 'trade') {
+                    priceField.style.display = 'none';
+                    wantedField.style.display = 'block';
+                } else { // both
+                    priceField.style.display = 'block';
+                    wantedField.style.display = 'block';
+                }
+            });
+        });
+
+        // --- Funcionalidad de Subida de Imágenes ---
+        const imageUploadArea = document.getElementById('imageUploadArea');
+        const imageUploadInput = document.getElementById('image-upload-input');
+        const previewContainer = document.getElementById('preview-container');
+        let uploadedImages = []; // Array para almacenar las imágenes cargadas
+
+        // Abrir selector de archivos al hacer clic en el área de subida
+        imageUploadArea.addEventListener('click', () => {
+            imageUploadInput.click();
+        });
+
+        // Prevenir comportamiento por defecto de arrastrar y soltar
+        imageUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            imageUploadArea.style.borderColor = 'var(--primary)'; // Feedback visual
+            imageUploadArea.style.backgroundColor = 'rgba(118, 25, 25, 0.2)';
+        });
+
+        imageUploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            imageUploadArea.style.borderColor = 'var(--highlight)';
+            imageUploadArea.style.backgroundColor = 'rgba(255, 193, 7, 0.05)';
+        });
+
+        imageUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            imageUploadArea.style.borderColor = 'var(--highlight)';
+            imageUploadArea.style.backgroundColor = 'rgba(255, 193, 7, 0.05)';
+            handleFiles(e.dataTransfer.files);
+        });
+
+        // Manejar archivos seleccionados
+        imageUploadInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            // Limitar a un máximo de 3 imágenes
+            const filesToProcess = Array.from(files).slice(0, 3 - uploadedImages.length);
+
+            filesToProcess.forEach(file => {
+                if (file.type.startsWith('image/') && uploadedImages.length < 3) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const imgUrl = e.target.result;
+                        uploadedImages.push(imgUrl); // Guarda la URL de la imagen
+                        renderPreviews();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function renderPreviews() {
+            previewContainer.innerHTML = '';
+            if (uploadedImages.length > 0) {
+                previewContainer.style.display = 'flex'; // Asegura que el contenedor sea visible
+                uploadedImages.forEach((url, index) => {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.innerHTML = `
+                        <img src="${url}" alt="Preview ${index + 1}">
+                        <button class="remove-btn" data-index="${index}"><i class="fas fa-times"></i></button>
+                    `;
+                    previewContainer.appendChild(previewDiv);
+                });
+
+                // Añadir event listeners a los botones de eliminar
+                document.querySelectorAll('.remove-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const indexToRemove = parseInt(e.target.closest('.remove-btn').dataset.index);
+                        removeImage(indexToRemove);
+                    });
+                });
+            } else {
+                previewContainer.style.display = 'none'; // Oculta si no hay imágenes
+            }
+        }
+
+        function removeImage(index) {
+            uploadedImages.splice(index, 1); // Elimina la imagen del array
+            renderPreviews(); // Vuelve a renderizar las vistas previas
+        }
+
+        // Asegurarse de que el preview-container se oculte si no hay imágenes al cargar la página
+        if (uploadedImages.length === 0) {
+            previewContainer.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

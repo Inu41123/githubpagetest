@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Negociación - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+            --success: #66BB6A;
+            --error: #EF5350;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Evita el scroll del body */
+        }
+
+        /* Header */
+        .chat-header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--accent);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            flex-shrink: 0; /* No permite que el header se encoja */
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--highlight);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        .back-btn:hover {
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+        
+        .user-info {
+            flex-grow: 1;
+        }
+        
+        .user-info h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .user-info p {
+            font-size: 0.8rem;
+            color: rgba(224, 224, 224, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .user-avatar {
+            width: 45px; /* Un poco más grande */
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Para que la imagen de avatar no se desborde */
+        }
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Card Preview */
+        .card-preview {
+            background-color: var(--surface);
+            padding: 1rem;
+            border-bottom: 1px solid var(--accent);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-shrink: 0; /* No permite que la preview se encoja */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .card-image {
+            width: 60px;
+            height: 90px;
+            background-color: var(--accent);
+            border-radius: 5px;
+            border: 1px solid var(--highlight);
+            object-fit: cover; /* Asegura que la imagen de la carta se vea bien */
+        }
+        
+        .card-details {
+            flex-grow: 1;
+        }
+        
+        .card-details h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .card-details p {
+            font-size: 0.9rem;
+            color: var(--highlight);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-status {
+            padding: 0.3rem 0.6rem;
+            background-color: rgba(255, 193, 7, 0.2);
+            color: var(--highlight);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto; /* Permite el scroll solo en el chat */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background-color: var(--bg); /* Asegura que el fondo del chat sea el de la app */
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .received {
+            align-self: flex-start;
+            background-color: var(--surface);
+            border-bottom-left-radius: 0;
+        }
+        
+        .sent {
+            align-self: flex-end;
+            background-color: var(--primary);
+            border-bottom-right-radius: 0;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: rgba(224, 224, 224, 0.5);
+            margin-top: 0.3rem;
+            text-align: right;
+        }
+        
+        .offer-message {
+            border: 1px solid var(--highlight);
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+        
+        .offer-details {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+        }
+        
+        .offer-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        
+        .offer-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .accept-btn {
+            background-color: var(--success);
+            color: white;
+        }
+        .accept-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .reject-btn {
+            background-color: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--accent);
+        }
+        .reject-btn:hover {
+            background-color: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 1rem;
+            background-color: var(--surface);
+            border-top: 1px solid var(--accent);
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-end; /* Alinea los elementos en la parte inferior */
+            flex-shrink: 0; /* No permite que el input se encoja */
+        }
+        
+        .message-input {
+            flex-grow: 1;
+            padding: 0.8rem 1rem;
+            border-radius: 20px; /* Menos redondo para mejor aspecto */
+            border: none;
+            background-color: var(--accent);
+            color: var(--text);
+            resize: none;
+            max-height: 120px;
+            overflow-y: auto; /* Permite scroll vertical si el texto es muy largo */
+            line-height: 1.4;
+        }
+        
+        .send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--highlight);
+            color: var(--bg);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0; /* No permite que se encoja */
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .action-btn { /* Botón de oferta en el input area */
+            background: none;
+            border: none;
+            color: var(--highlight);
+            font-size: 1.5rem; /* Un poco más grande */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px; /* Mismo tamaño que el botón de enviar */
+            height: 45px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+            flex-shrink: 0;
+        }
+        .action-btn:hover {
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+
+        /* Modal de Oferta */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .offer-form {
+            background: var(--surface);
+            width: 90%;
+            max-width: 500px;
+            padding: 1.5rem;
+            border-radius: 8px;
+            animation: modalFadeIn 0.3s ease;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .offer-form h3 {
+            margin-bottom: 1rem;
+            color: var(--highlight);
+            text-align: center;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 0.8rem;
+        }
+
+        .offer-form h3 span {
+            color: var(--text);
+        }
+
+        .offer-type {
+            display: flex;
+            justify-content: space-around; /* Distribuye los radios uniformemente */
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            background-color: var(--accent);
+            padding: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .offer-type label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .form-section {
+            margin: 1.5rem 0; /* Más espacio entre secciones */
+        }
+
+        .form-section label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(224, 224, 224, 0.8);
+        }
+
+        .form-section input,
+        .form-section select {
+            width: 100%;
+            padding: 0.8rem; /* Más padding */
+            background-color: var(--bg); /* Fondo más oscuro */
+            border: 1px solid var(--secondary);
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        .form-section input::placeholder,
+        .form-section select option {
+            color: rgba(224, 224, 224, 0.5);
+        }
+
+        .send-offer-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--highlight);
+            color: var(--bg);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .send-offer-btn:hover {
+            background-color: #FFB300;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-modal:hover {
+            color: var(--error);
+        }
+
+        /* Mejoras para ofertas en chat */
+        .offer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Alinea verticalmente */
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .offer-status {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .offer-status.pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--highlight);
+        }
+
+        .offer-status.accepted {
+            background: rgba(102, 187, 106, 0.2);
+            color: var(--success);
+        }
+
+        .offer-status.rejected { /* Estilo para rechazado */
+            background: rgba(239, 83, 80, 0.2);
+            color: var(--error);
+        }
+
+        .offer-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem; /* Más espacio */
+            margin: 0.8rem 0; /* Más espacio */
+        }
+
+        .offer-card-img {
+            width: 40px;
+            height: 56px; /* Altura más cercana a la proporción de cartas */
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--highlight);
+            flex-shrink: 0; /* Evita que la imagen se encoja */
+        }
+        .offer-item .fas { /* Ícono de euro */
+            color: var(--highlight);
+        }
+
+        .offer-total {
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px dashed var(--accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .counter-btn {
+            background-color: var(--secondary);
+            color: var(--text);
+            border: 1px solid var(--accent);
+        }
+        .counter-btn:hover {
+            background-color: var(--highlight);
+            color: var(--bg);
+            border-color: var(--highlight);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .message {
+                max-width: 85%;
+            }
+
+            .offer-actions {
+                flex-direction: column;
+            }
+
+            .offer-btn {
+                width: 100%;
+            }
+        }
+        @media (max-width: 576px) {
+            .chat-header h2 {
+                font-size: 1.1rem;
+            }
+            .card-details h3 {
+                font-size: 0.9rem;
+            }
+            .card-preview .card-image {
+                width: 50px;
+                height: 75px;
+            }
+            .input-area .message-input {
+                padding: 0.6rem 0.8rem;
+            }
+            .input-area .action-btn, .input-area .send-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-header">
+        <button class="back-btn" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="user-avatar">
+            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Avatar de DuelMaster22">
+        </div>
+        <div class="user-info">
+            <h2>DuelMaster22</h2>
+            <p><i class="fas fa-circle" style="color: var(--success); font-size: 0.6rem;"></i> En línea</p>
+        </div>
+    </div>
+
+    <div class="card-preview">
+        <img src="https://images.ygoprodeck.com/images/cards/89631139.jpg" alt="Dragón Blanco de Ojos Azules" class="card-image">
+        <div class="card-details">
+            <h3>Dragón Blanco de Ojos Azules</h3>
+            <p>€45.99 · <span class="card-status">En venta</span></p>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="message received">
+            Hola, ¿te interesaría intercambiar por mi Mago Oscuro más 10€ de diferencia?
+            <div class="message-time">10:15 AM</div>
+        </div>
+
+        <div class="message sent">
+            Hola, ¿podrías enviarme fotos de la carta por ambos lados?
+            <div class="message-time">10:18 AM</div>
+        </div>
+
+        <div class="message received offer-message" id="sampleOffer">
+            <div class="offer-header">
+                <strong>📌 Oferta Formal</strong>
+                <span class="offer-status pending" id="offerStatus">Pendiente</span>
+            </div>
+            <div class="offer-details">
+                <div class="offer-item">
+                    <img src="https://images.ygoprodeck.com/images/cards/30571392.jpg" alt="Mago Oscuro" class="offer-card-img">
+                    <span>Mago Oscuro (LOB-005, NM)</span>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-euro-sign"></i>
+                    <span>+€15.00</span>
+                </div>
+            </div>
+            <div class="offer-total">
+                <span>Total ofrecido: <strong>~€60.00</strong> (valor estimado)</span>
+            </div>
+            <div class="offer-actions">
+                <button class="offer-btn accept-btn" onclick="acceptOffer()">
+                    <i class="fas fa-check"></i> Aceptar
+                </button>
+                <button class="offer-btn counter-btn" onclick="counterOffer()">
+                    <i class="fas fa-exchange-alt"></i> Contraofertar
+                </button>
+                <button class="offer-btn reject-btn" onclick="rejectOffer()">
+                    <i class="fas fa-times"></i> Rechazar
+                </button>
+            </div>
+            <div class="message-time">Hoy 10:22 AM</div>
+        </div>
+
+        <div class="message sent">
+            Voy a pensarlo y te respondo en unas horas, ¿vale?
+            <div class="message-time">10:25 AM</div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <button class="action-btn" onclick="openOfferForm()">
+            <i class="fas fa-handshake"></i>
+        </button>
+        <textarea class="message-input" id="messageInput" placeholder="Escribe tu mensaje..." rows="1"></textarea>
+        <button class="send-btn" id="sendMessageBtn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+
+    <div class="modal-overlay" id="offerFormModal">
+        <div class="offer-form">
+            <button class="close-modal" onclick="closeOfferForm()">&times;</button>
+            <h3>Nueva Oferta para <span>Dragón Blanco</span></h3>
+            <form id="offerForm" onsubmit="sendOffer(event)">
+                <div class="offer-type">
+                    <label><input type="radio" name="offerType" value="money" checked> Dinero</label>
+                    <label><input type="radio" name="offerType" value="trade"> Intercambio</label>
+                    <label><input type="radio" name="offerType" value="mixed"> Mixto</label>
+                </div>
+
+                <div class="form-section" id="moneySection">
+                    <label for="offerAmount">Monto (€)</label>
+                    <input type="number" id="offerAmount" min="0.01" step="0.01" placeholder="Ej: 45.00">
+                </div>
+
+                <div class="form-section" id="tradeSection" style="display:none">
+                    <label for="tradeCard">Selecciona una carta tuya:</label>
+                    <select id="tradeCard">
+                        <option value="Mago Oscuro (LOB-005)">Mago Oscuro (LOB-005)</option>
+                        <option value="Dragón Negro de Ojos Rojos (SDK-001)">Dragón Negro de Ojos Rojos (SDK-001)</option>
+                        <option value="Cilindro Mágico (IOC-000)">Cilindro Mágico (IOC-000)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="send-offer-btn">Enviar Oferta</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const offerFormModal = document.getElementById('offerFormModal');
+        const offerForm = document.getElementById('offerForm');
+        const moneySection = document.getElementById('moneySection');
+        const tradeSection = document.getElementById('tradeSection');
+        const offerAmountInput = document.getElementById('offerAmount');
+        const tradeCardSelect = document.getElementById('tradeCard');
+
+        // Autoajuste del textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Mantiene el scroll al final
+        });
+
+        // Enviar mensaje al presionar Enter (Shift + Enter para salto de línea)
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // Evita el salto de línea por defecto
+                sendMessage();
+            }
+        });
+
+        // Enviar mensaje al hacer click en el botón
+        sendMessageBtn.addEventListener('click', sendMessage);
+
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message sent';
+                newMessage.innerHTML = `
+                    ${messageText}
+                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                `;
+                chatContainer.appendChild(newMessage);
+                messageInput.value = '';
+                messageInput.style.height = 'auto'; // Restablece la altura
+                chatContainer.scrollTop = chatContainer.scrollHeight; // Desplaza al final
+            }
+        }
+
+        // Mostrar/ocultar formulario de oferta
+        function openOfferForm() {
+            offerFormModal.style.display = 'flex';
+            // Asegura que el campo de monto tenga el atributo 'required' si es una oferta de dinero/mixta
+            const selectedOfferType = document.querySelector('input[name="offerType"]:checked').value;
+            if (selectedOfferType === 'money' || selectedOfferType === 'mixed') {
+                offerAmountInput.setAttribute('required', 'required');
+            } else {
+                offerAmountInput.removeAttribute('required');
+            }
+            offerAmountInput.focus(); // Enfoca el input de monto al abrir
+        }
+
+        function closeOfferForm() {
+            offerFormModal.style.display = 'none';
+            offerForm.reset(); // Reinicia el formulario al cerrar
+            // Restablece la visibilidad de las secciones a su estado inicial
+            moneySection.style.display = 'block';
+            tradeSection.style.display = 'none';
+            // Quita el atributo required si no es necesario
+            offerAmountInput.removeAttribute('required');
+        }
+
+        // Cambiar entre tipos de oferta en el modal
+        document.querySelectorAll('input[name="offerType"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const type = e.target.value;
+                moneySection.style.display = (type === 'trade') ? 'none' : 'block';
+                tradeSection.style.display = (type === 'money') ? 'none' : 'block';
+
+                // Gestiona el atributo 'required' para el campo de monto
+                if (type === 'money' || type === 'mixed') {
+                    offerAmountInput.setAttribute('required', 'required');
+                } else {
+                    offerAmountInput.removeAttribute('required');
+                }
+            });
+        });
+
+        // Enviar oferta (simulación)
+        function sendOffer(e) {
+            e.preventDefault();
+            const offerType = document.querySelector('input[name="offerType"]:checked').value;
+            let offerContent = '';
+            
+            if (offerType === 'money') {
+                const amount = parseFloat(offerAmountInput.value).toFixed(2);
+                if (isNaN(amount) || amount <= 0) {
+                    alert('Por favor, ingresa un monto válido.');
+                    return;
+                }
+                offerContent = `
+                    <div class="offer-item">
+                        <i class="fas fa-euro-sign"></i>
+                        <span>Oferta de dinero: <strong>€${amount}</strong></span>
+                    </div>
+                `;
+            } 
+            else if (offerType === 'trade') {
+                const card = tradeCardSelect.value;
+                if (!card) {
+                    alert('Por favor, selecciona una carta para el intercambio.');
+                    return;
+                }
+                // Placeholder para la imagen de la carta ofrecida en el intercambio
+                const cardImage = card.includes('Mago Oscuro') ? 'https://images.ygoprodeck.com/images/cards/30571392.jpg' : 
+                                  (card.includes('Dragón Negro') ? 'https://images.ygoprodeck.com/images/cards/74677422.jpg' :
+                                  'https://via.placeholder.com/40x60?text=Carta');
+                offerContent = `
+                    <div class="offer-item">
+                        <img src="${cardImage}" alt="${card}" class="offer-card-img">
+                        <span>Oferta de intercambio: <strong>${card}</strong></span>
+                    </div>
+                `;
+            } 
+            else { // mixed
+                const amount = parseFloat(offerAmountInput.value).toFixed(2);
+                const card = tradeCardSelect.value;
+
+                if ((isNaN(amount) || amount <= 0) && !card) {
+                    alert('Para una oferta mixta, debes ingresar un monto y/o seleccionar una carta.');
+                    return;
+                }
+                
+                let mixedDetails = '';
+                // Placeholder para la imagen de la carta ofrecida en el intercambio
+                const cardImage = card.includes('Mago Oscuso') ? 'https://images.ygoprodeck.com/images/cards/30571392.jpg' : 
+                                  (card.includes('Dragón Negro') ? 'https://images.ygoprodeck.com/images/cards/74677422.jpg' :
+                                  'https://via.placeholder.com/40x60?text=Carta');
+
+                if (card) {
+                    mixedDetails += `
+                        <div class="offer-item">
+                            <img src="${cardImage}" alt="${card}" class="offer-card-img">
+                            <span><strong>${card}</strong></span>
+                        </div>
+                    `;
+                }
+                if (!isNaN(amount) && amount > 0) {
+                    mixedDetails += `
+                        <div class="offer-item">
+                            <i class="fas fa-euro-sign"></i>
+                            <span>+ <strong>€${amount}</strong></span>
+                        </div>
+                    `;
+                }
+                offerContent = `
+                    <p>Oferta mixta:</p>
+                    ${mixedDetails}
+                `;
+            }
+
+            // Insertar como mensaje en el chat
+            const newMessage = document.createElement('div');
+            newMessage.className = 'message sent offer-message';
+            newMessage.innerHTML = `
+                <div class="offer-header">
+                    <strong>Tu Oferta Formal</strong>
+                    <span class="offer-status pending">Pendiente</span>
+                </div>
+                <div class="offer-details">
+                    ${offerContent}
+                </div>
+                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+            `;
+            chatContainer.appendChild(newMessage);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            closeOfferForm();
+        }
+
+        // Acciones sobre ofertas recibidas
+        function acceptOffer() {
+            const offerStatusElement = document.getElementById('offerStatus');
+            if (offerStatusElement) {
+                offerStatusElement.textContent = 'Aceptada';
+                offerStatusElement.className = 'offer-status accepted';
+                // Deshabilitar botones de acción después de aceptar
+                const offerActions = document.querySelector('#sampleOffer .offer-actions');
+                if (offerActions) {
+                    Array.from(offerActions.children).forEach(button => {
+                        button.disabled = true;
+                        button.style.opacity = 0.6;
+                        button.style.cursor = 'not-allowed';
+                    });
+                }
+                alert('¡Oferta aceptada! Notificaremos al vendedor y podrán proceder con la transacción.');
+            }
+        }
+
+        function rejectOffer() {
+            const offerStatusElement = document.getElementById('offerStatus');
+            if (offerStatusElement) {
+                offerStatusElement.textContent = 'Rechazada';
+                offerStatusElement.className = 'offer-status rejected';
+                // Deshabilitar botones de acción después de rechazar
+                const offerActions = document.querySelector('#sampleOffer .offer-actions');
+                if (offerActions) {
+                    Array.from(offerActions.children).forEach(button => {
+                        button.disabled = true;
+                        button.style.opacity = 0.6;
+                        button.style.cursor = 'not-allowed';
+                    });
+                }
+                alert('Oferta rechazada. Se ha notificado al vendedor.');
+            }
+        }
+
+        function counterOffer() {
+            // Aquí podrías pre-llenar el formulario con la oferta anterior si quisieras,
+            // pero para esta simulación, solo abrimos el modal
+            openOfferForm();
+            alert('Has elegido contraofertar. Por favor, crea tu nueva oferta.');
+        }
+
+        // Auto-scroll al cargar la página para ver los mensajes recientes
+        window.addEventListener('load', () => {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+    </script>
+</body>
+</html>

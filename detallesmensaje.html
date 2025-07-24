@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Notificación - Duel Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+            --error: #EF5350;
+            --success: #66BB6A;
+            --info: #29B6F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* === HEADER === */
+        .header {
+            background-color: var(--surface);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--highlight);
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* === MAIN CONTENT === */
+        .notification-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--highlight);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .notification-card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid var(--highlight);
+        }
+        
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background-color: rgba(255, 193, 7, 0.2);
+            color: var(--highlight);
+        }
+        
+        .notification-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .notification-time {
+            color: rgba(224, 224, 224, 0.7);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
+        }
+        
+        .notification-body {
+            margin: 2rem 0;
+            line-height: 1.7;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: var(--accent);
+            margin: 1.5rem 0;
+        }
+        
+        .related-card {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            background-color: var(--accent);
+            padding: 1rem;
+            border-radius: 8px;
+            align-items: center;
+        }
+        
+        .card-thumbnail {
+            width: 80px;
+            height: 120px;
+            background-color: var(--surface);
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--highlight);
+        }
+        
+        .card-info p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--highlight);
+            color: var(--bg);
+        }
+        
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--text);
+        }
+        
+        .btn-danger {
+            background-color: var(--error);
+            color: white;
+        }
+        
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .notification-container {
+                padding: 0 1rem;
+            }
+            
+            .related-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">DUEL MARKET</div>
+        <button class="header-btn">
+            <i class="fas fa-times"></i>
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <div class="notification-container">
+        <a href="#" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Volver a notificaciones
+        </a>
+        
+        <div class="notification-card">
+            <div class="notification-header">
+                <div class="notification-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <div>
+                    <h2 class="notification-title">Nueva oferta recibida</h2>
+                    <div class="notification-time">
+                        <i class="far fa-clock"></i> Hace 2 horas · No leída
+                    </div>
+                </div>
+            </div>
+            
+            <div class="notification-body">
+                <p><strong>DuelMaster22</strong> ha realizado una oferta por tu carta <strong>Dragón Blanco de Ojos Azules</strong>.</p>
+                
+                <div class="divider"></div>
+                
+                <h3>Detalles de la oferta:</h3>
+                <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Monto ofertado:</strong> 45.99€</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Mensaje del comprador:</strong> "¿Aceptarías 45.99€ por la carta? Estoy interesado en comprarla hoy mismo."</li>
+                    <li><strong>Método de pago:</strong> PayPal</li>
+                </ul>
+                
+                <div class="related-card">
+                    <div class="card-thumbnail">
+                        <img src="https://images.ygoprodeck.com/images/cards/89631139.jpg" alt="Dragón Blanco">
+                    </div>
+                    <div class="card-info">
+                        <h4>Dragón Blanco de Ojos Azules</h4>
+                        <p>Ultra Rara · Español · Nuevo</p>
+                        <p><strong>Precio publicado:</strong> 50.00€</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-primary">Aceptar oferta</button>
+                <button class="btn btn-outline">Contraoferta</button>
+                <button class="btn btn-outline">Enviar mensaje</button>
+                <button class="btn btn-danger">Rechazar oferta</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de marcar como leída al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aquí iría la lógica para actualizar el estado en el backend
+            console.log('Notificación marcada como leída');
+        });
+    </script>
+</body>
+</html>

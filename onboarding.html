@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duel Market - Onboarding</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary: #761919e1;
+            --secondary: #37474F;
+            --highlight: #FFC107;
+            --bg: #121212;
+            --text: #E0E0E0;
+            --accent: #424242;
+            --surface: #1E1E1E;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .onboarding-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .slides-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .slide-icon {
+            font-size: 5rem;
+            color: var(--highlight);
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--highlight);
+        }
+        
+        .slide p {
+            max-width: 500px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        /* Fondos diferenciados para cada slide */
+        .slide:nth-child(1) {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a0000 100%);
+        }
+        
+        .slide:nth-child(2) {
+            background: linear-gradient(135deg, #1a0000 0%, var(--primary) 100%);
+        }
+        
+        .slide:nth-child(3) {
+            background: linear-gradient(135deg, var(--primary) 0%, #2a0000 100%);
+        }
+        
+        /* Navegación */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .btn-skip {
+            color: var(--highlight);
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .btn-next {
+            background-color: var(--highlight);
+            color: var(--bg);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-3px);
+        }
+        
+        .indicators {
+            display: flex;
+            gap: 0.5rem;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .indicator.active {
+            background-color: var(--highlight);
+            transform: scale(1.2);
+        }
+        
+        /* Animaciones */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Efecto de transición entre slides */
+        .slide.next {
+            transform: translateX(100%);
+        }
+        
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+        
+        .slide.active {
+            transform: translateX(0);
+        }
+           .close-link { /* Nueva clase para el enlace de cerrar */
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            text-decoration: none; /* Elimina el subrayado */
+            display: inline-block;
+            padding: 0.2rem; /* Pequeño padding para área de clic */
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-container">
+        <div class="slides-container">
+            <!-- Slide 1 -->
+            <div class="slide active">
+                <div class="slide-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h2>Duelistas cerca de ti</h2>
+                <p>Encuentra jugadores en tu zona para intercambiar cartas de Yu-Gi-Oh! con nuestro sistema de geolocalización.</p>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="slide next">
+                <div class="slide-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h2>Intercambios en tiempo real</h2>
+                <p>Observa los intercambios que están sucediendo ahora mismo y únete a la comunidad de duelistas.</p>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div class="slide next">
+                <div class="slide-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2>Transacciones seguras</h2>
+                <p>Sistema de reputación y encuentros verificados para que tus intercambios sean 100% confiables.</p>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="btn-skip">Saltar</button>
+            
+            <div class="indicators">
+                <div class="indicator active"></div>
+                <div class="indicator"></div>
+                <div class="indicator"></div>
+            </div>
+            
+            <button class="btn-next">Siguiente</button>
+        </div>
+    </div>
+    
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const indicators = document.querySelectorAll('.indicator');
+        const btnNext = document.querySelector('.btn-next');
+        const btnSkip = document.querySelector('.btn-skip');
+        
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev', 'next');
+                
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                } else {
+                    slide.classList.add('next');
+                }
+            });
+            
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+            
+            // Cambiar texto del botón en el último slide
+            if (currentSlide === slides.length - 1) {
+                btnNext.textContent = 'Comenzar';
+            } else {
+                btnNext.textContent = 'Siguiente';
+            }
+        }
+        
+        btnNext.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlides();
+            } else {
+                // Redirigir al login
+                window.location.href = "Login.html";
+            }
+        });
+        
+        btnSkip.addEventListener('click', () => {
+            window.location.href = "Login.html";
+        });
+        
+        // Opcional: Swipe para móviles
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX && currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlides();
+            }
+            
+            if (touchEndX > touchStartX && currentSlide > 0) {
+                currentSlide--;
+                updateSlides();
+            }
+        }
+    </script>
+</body>
+</html>
